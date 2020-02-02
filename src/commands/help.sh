@@ -39,7 +39,7 @@ help_command () {
     add_usage_command "r,run" "Run the devilbox docker containers"
     add_usage_arg "-s,--silent" "Hide errors and run in background"
     add_usage_command "s,stop" "Stop devilbox and docker containers"
-    add_usage_arg "--r,--remove" "Removes stopped service containers."
+    add_usage_arg "-r,--remove" "Removes stopped service containers."
     add_usage_command "x,exec" "Execute command in devilbox shell"
     add_usage_command "u,update" "Update devilbox and docker containers"
     add_usage_command "v, version" "Show version information"

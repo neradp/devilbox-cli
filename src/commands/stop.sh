@@ -6,7 +6,7 @@ stop_command () {
     docker-compose stop
     for arg in "$@"; do
         case $arg in
-            --r|--remove) docker-compose rm -f; shift;;
+            -r|--remove) docker-compose rm -f; shift;;
         esac
     done
 
