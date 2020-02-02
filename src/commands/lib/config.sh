@@ -3,7 +3,7 @@
 get_config () {
     local config=$1
     local current
-    current=$(grep -Eo "^$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*$config//g")
+    current=$(grep -Eo "^$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")
     if was_success && [ ! -z "$current" ] ;then
         printf "%s" "$current"
         return "$OK_CODE"

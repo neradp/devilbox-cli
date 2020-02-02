@@ -4,5 +4,10 @@ stop_command () {
         return "$KO_CODE"
     fi
     docker-compose stop
-    docker-compose rm -f
+    for arg in "$@"; do
+        case $arg in
+            -r|--remove) docker-compose rm -f; shift;;
+        esac
+    done
+
 }

@@ -1,16 +1,16 @@
 #!/bin/bash
 
-VERSION="0.3.0"
-DATE="2020-01-17"
+VERSION="0.3.1"
+DATE="2020-02-02"
 NAME="devilbox-cli"
 DESCRIPTION="A simple and conveniant command line to manage devilbox from anywhere"
-LINK="https://github.com/louisgab/devilbox-cli"
+LINK="https://github.com/neradp/devilbox-cli"
 
 ENV_FILE=".env"
 
 PHP_CONFIG="PHP_SERVER="
-APACHE_CONFIG="HTTPD_SERVER=apache-"
-MYSQL_CONFIG="MYSQL_SERVER=mysql-"
+HTTPD_CONFIG="HTTPD_SERVER="
+MYSQL_CONFIG="MYSQL_SERVER="
 DOCROOT_CONFIG="HTTPD_DOCROOT_DIR="
 WWWPATH_CONFIG="HOST_PATH_HTTPD_DATADIR="
 
@@ -115,7 +115,7 @@ is_choice_existing () {
 get_current_choice () {
     local config=$1
     local current
-    current=$(grep -Eo "^$config+[.[:digit:]]*" "$ENV_FILE" | sed "s/.*$config//g")
+    current=$(grep -Eo "^$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")
     if was_success && [ ! -z "$current" ] ;then
         printf "%s" "$current"
         return "$OK_CODE"
@@ -139,7 +139,7 @@ is_choice_available() {
 get_all_choices () {
     local config=$1
     local all
-    all=$(grep -Eo "^#*$config+[.[:digit:]]*" "$ENV_FILE" | sed "s/.*$config//g")
+    all=$(grep -Eo "^#*$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")
     if was_success && [ ! -z "$all" ] ;then
         printf "%s\n" "$all"
         return "$OK_CODE"
@@ -256,7 +256,7 @@ set_readable_choice () {
 get_config () {
     local config=$1
     local current
-    current=$(grep -Eo "^$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*$config//g")
+    current=$(grep -Eo "^$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")
     if was_success && [ ! -z "$current" ] ;then
         printf "%s" "$current"
         return "$OK_CODE"
@@ -324,17 +324,17 @@ is_running () {
     fi
 }
 
-get_current_apache_version () {
-    get_readable_current_choice "Apache" "$APACHE_CONFIG"
+get_current_httpd_version () {
+    get_readable_current_choice "HTTPD" "$HTTPD_CONFIG"
 }
 
-get_all_apache_versions () {
-    get_readable_all_choices "Apache" "$APACHE_CONFIG"
+get_all_httpd_versions () {
+    get_readable_all_choices "HTTPD" "$HTTPD_CONFIG"
 }
 
-set_apache_version () {
+set_httpd_version () {
     local new=$1
-    set_readable_choice "Apache" "$APACHE_CONFIG" "$new"
+    set_readable_choice "HTTPD" "$HTTPD_CONFIG" "$new"
 }
 
 get_current_php_version () {
@@ -351,16 +351,16 @@ set_php_version () {
 }
 
 get_current_mysql_version () {
-    get_readable_current_choice "MySql" "$MYSQL_CONFIG"
+    get_readable_current_choice "MySQL" "$MYSQL_CONFIG"
 }
 
 get_all_mysql_versions () {
-    get_readable_all_choices "MySql" "$MYSQL_CONFIG"
+    get_readable_all_choices "MySQL" "$MYSQL_CONFIG"
 }
 
 set_mysql_version () {
     local new=$1
-    set_readable_choice "MySql" "$MYSQL_CONFIG" "$new"
+    set_readable_choice "MySQL" "$MYSQL_CONFIG" "$new"
 }
 
 get_current_document_root () {
@@ -384,9 +384,9 @@ set_projects_path () {
 config_command () {
     for arg in "$@"; do
         case $arg in
-            -a=\*|--apache=\*) get_all_apache_versions; shift;;
-            -a=*|--apache=*) set_apache_version "${arg#*=}"; shift;;
-            -a|--apache) get_current_apache_version; shift;;
+            -h=\*|--httpd=\*) get_all_httpd_versions; shift;;
+            -h=*|--httpd=*) set_httpd_version "${arg#*=}"; shift;;
+            -h|--httpd) get_current_httpd_version; shift;;
             -p=\*|--php=\*) get_all_php_versions; shift;;
             -p=*|--php=*) set_php_version "${arg#*=}"; shift;;
             -p|--php) get_current_php_version; shift;;
@@ -426,12 +426,12 @@ help_command () {
     printf "%s\n" "Usage: $0 <command> [--args]... "
     printf "\n"
     add_usage_command "c,config" "Show / Edit the current config"
-    add_usage_arg "--a=[x.x],--apache=[x.x]" "Set a specific apache version"
-    add_usage_arg "--a=*,--apache=*" "Get all available apache versions"
+    add_usage_arg "--h=[x.x],--httpd=[x.x]" "Set a specific httpd version"
+    add_usage_arg "--h=*,--httpd=*" "Get all available httpd versions"
     add_usage_arg "--p=*,--php=*" "Get all available php versions"
     add_usage_arg "--m=*,--mysql=*" "Get all available mysql versions"
     add_usage_arg "--p,--php" "Get current php version"
-    add_usage_arg "--a,--apache" "Get current apache version"
+    add_usage_arg "--h,--httpd" "Get current httpd version"
     add_usage_arg "--m,--mysql" "Get current mysql version"
     add_usage_arg "--r=[path],--root=[path]" "Set the document root"
     add_usage_arg "--r,--root" "Get the current document root"
@@ -450,17 +450,19 @@ help_command () {
     add_usage_command "r,run" "Run the devilbox docker containers"
     add_usage_arg "-s,--silent" "Hide errors and run in background"
     add_usage_command "s,stop" "Stop devilbox and docker containers"
+    add_usage_arg "--r,--remove" "Removes stopped service containers."
+    add_usage_command "x,exec" "Execute command in devilbox shell"
     add_usage_command "u,update" "Update devilbox and docker containers"
     add_usage_command "v, version" "Show version information"
     printf "\n"
 }
 
 open_http_intranet () {
-    xdg-open "http://localhost/" 2> /dev/null >/dev/null
+    cygstart "http://devilbox.devel" 2> /dev/null >/dev/null
 }
 
 open_https_intranet () {
-    xdg-open "https://localhost/" 2> /dev/null >/dev/null
+    cygstart "https://devilbox.devel/" 2> /dev/null >/dev/null
 }
 
 open_command () {
@@ -493,11 +495,11 @@ get_default_containers() {
 }
 
 run_containers () {
-    docker-compose up $(get_default_containers)
+    docker-compose up
 }
 
 run_containers_silent () {
-    docker-compose up -d $(get_default_containers)
+    docker-compose up -d
 }
 
 run_command () {
@@ -522,7 +524,30 @@ stop_command () {
         return "$KO_CODE"
     fi
     docker-compose stop
-    docker-compose rm -f
+    for arg in "$@"; do
+        case $arg in
+            -r|--remove) docker-compose rm -f; shift;;
+        esac
+    done
+
+}
+
+exec_command () {
+
+    if ! is_running; then
+        error "Devilbox containers are not running"
+        return "$KO_CODE"
+    fi
+    local projets_dir
+    project_dir=$(grep -Eo "^HOST_PATH_HTTPD_DATADIR+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")/$PROJECT
+    local remote_dir
+    remote_dir=/shared/httpd/$PROJECT
+    if [ -d "$project_dir" ]; then
+        winpty -Xallow-non-tty docker-compose exec --user devilbox --workdir $remote_dir  php $*
+    else
+       error "Can run commands only in project dir $project_dir"
+    fi
+
 }
 
 get_recent_devilbox_versions () {
@@ -618,6 +643,7 @@ main () {
             restart) shift; restart_command "$@";;
             r|run) shift; run_command "$@";;
             s|stop) shift; stop_command;;
+            x|exec) shift; exec_command "$@";;
             u|update) shift; update_command;;
             v|version|-v|--version) shift; version_command;;
             *) error "Unknown command $arg, see -h for help.";;

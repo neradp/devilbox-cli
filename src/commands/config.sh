@@ -1,9 +1,9 @@
 config_command () {
     for arg in "$@"; do
         case $arg in
-            -a=\*|--apache=\*) get_all_apache_versions; shift;;
-            -a=*|--apache=*) set_apache_version "${arg#*=}"; shift;;
-            -a|--apache) get_current_apache_version; shift;;
+            -h=\*|--httpd=\*) get_all_httpd_versions; shift;;
+            -h=*|--httpd=*) set_httpd_version "${arg#*=}"; shift;;
+            -h|--httpd) get_current_httpd_version; shift;;
             -p=\*|--php=\*) get_all_php_versions; shift;;
             -p=*|--php=*) set_php_version "${arg#*=}"; shift;;
             -p|--php) get_current_php_version; shift;;

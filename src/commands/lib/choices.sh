@@ -15,7 +15,7 @@ is_choice_existing () {
 get_current_choice () {
     local config=$1
     local current
-    current=$(grep -Eo "^$config+[.[:digit:]]*" "$ENV_FILE" | sed "s/.*$config//g")
+    current=$(grep -Eo "^$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")
     if was_success && [ ! -z "$current" ] ;then
         printf "%s" "$current"
         return "$OK_CODE"
@@ -39,7 +39,7 @@ is_choice_available() {
 get_all_choices () {
     local config=$1
     local all
-    all=$(grep -Eo "^#*$config+[.[:digit:]]*" "$ENV_FILE" | sed "s/.*$config//g")
+    all=$(grep -Eo "^#*$config+[[:alnum:][:punct:]]*" "$ENV_FILE" | sed "s/.*=//g")
     if was_success && [ ! -z "$all" ] ;then
         printf "%s\n" "$all"
         return "$OK_CODE"

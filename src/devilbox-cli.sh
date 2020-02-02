@@ -14,7 +14,7 @@ source commands/lib/choices.sh
 source commands/lib/config.sh
 source commands/lib/docker.sh
 
-source commands/config/apache.sh
+source commands/config/httpd.sh
 source commands/config/php.sh
 source commands/config/mysql.sh
 source commands/config/docroot.sh

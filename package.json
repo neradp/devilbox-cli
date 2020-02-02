@@ -1,25 +1,25 @@
 {
     "name": "devilbox-cli",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "description": "A simple and conveniant command line to manage devilbox from anywhere",
-    "author": "Louis Gabriel <code@louisgab.me>",
+    "author": "Peter Nerad <peter@nerad.sk>",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/louisgab/devilbox-cli/issues"
+        "url": "https://github.com/neradp/devilbox-cli/issues"
     },
-    "homepage": "https://github.com/louisgab/devilbox-cli",
+    "homepage": "https://github.com/neradp/devilbox-cli",
     "bin": {
-        "devilbox": "./dist/devilbox-cli.sh"
+        "devilbox": ".\\dist\\devilbox-cli.sh"
     },
     "scripts": {
-        "clean": "./bin/clean.sh",
-        "lint": "./bin/lint.sh",
-        "build": "./bin/build.sh",
+        "clean": "cygstart .\\bin\\clean.sh",
+        "lint": "cygstart .\\bin\\lint.sh",
+        "build": "cygstart .\\bin\\build.sh",
         "prepare": "npm run clean && npm run lint && npm run build"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/louisgab/devilbox-cli.git"
+        "url": "git+https://github.com/neradp/devilbox-cli.git"
     },
     "keywords": [
         "devilbox",
@@ -27,5 +27,6 @@
         "lamp",
         "bash",
         "cli"
-    ]
+    ],
+    "dependencies": {}
 }

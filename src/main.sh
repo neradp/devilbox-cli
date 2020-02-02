@@ -28,6 +28,7 @@ main () {
             restart) shift; restart_command "$@";;
             r|run) shift; run_command "$@";;
             s|stop) shift; stop_command;;
+            x|exec) shift; exec_command "$@";;
             u|update) shift; update_command;;
             v|version|-v|--version) shift; version_command;;
             *) error "Unknown command $arg, see -h for help.";;

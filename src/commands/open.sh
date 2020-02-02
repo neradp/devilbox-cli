@@ -1,9 +1,9 @@
 open_http_intranet () {
-    xdg-open "http://localhost/" 2> /dev/null >/dev/null
+    cygstart "http://devilbox.devel" 2> /dev/null >/dev/null
 }
 
 open_https_intranet () {
-    xdg-open "https://localhost/" 2> /dev/null >/dev/null
+    cygstart "https://devilbox.devel/" 2> /dev/null >/dev/null
 }
 
 open_command () {
